@@ -59,6 +59,10 @@ module 0x1::Project{
         };
         a
     }
+     public fun delete_employee(account:&signer) acquires Employee {
+       let a = &mut borrow_global_mut<Employee>(signer::address_of(account)).isStillAnEmployee;
+        *a = false;
+    }
 
     #[test(account = @0x2)]
     public fun test_increase_salary(account:&signer) acquires Employee{
@@ -78,10 +82,7 @@ module 0x1::Project{
 
     }
 
-    public fun delete_employee(account:&signer) acquires Employee {
-       let a = &mut borrow_global_mut<Employee>(signer::address_of(account)).isStillAnEmployee;
-        *a = false;
-    }
+   
      #[test(account = @0x2)]
     public fun test_decrease_salary (account:&signer) acquires Employee{
         let employee_id = 1;
