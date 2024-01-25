@@ -1,9 +1,12 @@
 [package]
 name = "project"
 version = "1.0.0"
+upgrade_policy = "compatible"
 authors = []
 
 [addresses]
+my_module ="0x2eceb7742eca6babc2dc91c764d7e8d9f8acc339747e841613a964df8246d940"
+resource_account = "0xa53af50780a0e1f1afb4f122dee2f9acdac730a12f85f098e93b06b85578c376"
 
 [dev-addresses]
 
