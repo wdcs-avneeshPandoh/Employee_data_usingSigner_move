@@ -24,36 +24,44 @@ module resource_account::Project{
         shift_completed:bool,
     }
 
-
+// function CREATE EMPLOYEE to add new employees to record their data.
+// @param account = signer provide by your wallet to handle structs for saving data.
+// @params employee id, name, age, salary. basic information this smart contract requires to initiate the CREATE EMPLOYEE function
     public entry fun createEmployee(account:&signer,employee_id:u64,name:vector<u8>,age:u64,salary:u64){
         let isStillAnEmployee = true;
        
         move_to(account, Employee{employee_id, name, age, salary,isStillAnEmployee})
     }
     
-
+// function INCREASE SALARY to add quaterly or yearly increment to EMPLOYEE struct (to update the info in the structs)
+// @param account = signer to exactly get the data for specific employee you are updating the Struct EMPLOYEE for.
+// @param bonus: u64 to get the increment in salary yearly or quaterly.
     public fun increase_salary(account:&signer,bonus:u64 )acquires Employee{
         let a_ref = &mut borrow_global_mut<Employee>(signer::address_of(account)).salary;
         *a_ref = *a_ref + bonus;
     }
 
-
+//  function DECREASE SALARY to decrease the salary of the employee in EMPLOYEE struct.
+//  @param account = signer to exactly get the data for specific employee you are updating the Struct EMPLOYEE for.
+//  @param cut:u64 to enter the cut in the salary .
     public fun decrease_salary(account:&signer,cut:u64 )acquires Employee {
         let a_ref = &mut borrow_global_mut<Employee>(signer::address_of(account)).salary;
         *a_ref = *a_ref - cut;
     }
 
-    public fun shift_completed_or_not(account:&signer):bool acquires Shift{
-        let shift_completed = borrow_global<Shift>(signer::address_of(account)).shift_completed;
-        shift_completed
-    }
-
+//  function PUNCH IN to enter the time of entry into office premises or the time at which work started.
+//  @param account = signer to identify the employee which is logging in.
+//  it stores the time to SHIFT struct to save the data of time of entry .
     
     public fun punch_in(account:&signer)   {
         move_to(account,Shift{punch_in_time: timestamp(), punch_out_time:0, hours_completed:0, shift_completed:false});
         
 
     }
+
+//  function PUNCH OUT to enter the time of exit of premises or the time at which employee declares end of the day.
+//  @param account = signer is to identify the employee which is declaring end of the day.
+//       
 
     public fun punch_out(account:&signer) acquires Shift{
         let shift_Completed : &mut Shift = borrow_global_mut<Shift>(signer::address_of(account));
@@ -73,6 +81,13 @@ module resource_account::Project{
         *a = false;
     }
 
+
+    public fun shift_completed_or_not(account:&signer):bool acquires Shift{
+        let shift_completed = borrow_global<Shift>(signer::address_of(account)).shift_completed;
+        shift_completed
+    }
+
+
     fun timestamp():u64  {
         timestamp::now_seconds()
       
@@ -80,7 +95,6 @@ module resource_account::Project{
 
     #[test(account = @0x2)]
     public fun test_increase_salary(account:&signer) acquires Employee{
-        // account::create_account_for_test(signer::address_of(&admin));
         let employee_id = 1;
         let name = b"Avneesh";
         let age =  21 ;
@@ -153,8 +167,7 @@ module resource_account::Project{
         assert!(shift_completed == true,103);
     }
 
-//shift_completed_or_not
-    
+\    
 }
 
 
