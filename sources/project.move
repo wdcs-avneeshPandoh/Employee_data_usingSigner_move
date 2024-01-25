@@ -61,7 +61,7 @@ module resource_account::Project{
 
 //  function PUNCH OUT to enter the time of exit of premises or the time at which employee declares end of the day.
 //  @param account = signer is to identify the employee which is declaring end of the day.
-//       
+//   it stores the time to SHIFT struct to save the data of end of day for an employee
 
     public fun punch_out(account:&signer) acquires Shift{
         let shift_Completed : &mut Shift = borrow_global_mut<Shift>(signer::address_of(account));
@@ -74,14 +74,17 @@ module resource_account::Project{
         };
         
     }
-
+//  function DELTE EMPLOYEE is to delete the employee from the struct EMPLOYEE and remove its data.
+//  @param account = signer to identify which employee is to be deleted from the database.
 
      public fun delete_employee(account:&signer) acquires Employee {
        let a = &mut borrow_global_mut<Employee>(signer::address_of(account)).isStillAnEmployee;
         *a = false;
     }
 
-
+//  function SHIFT COMPLETED OR NOT is an internal function which take account signer as an input to identify which employee we are trying to fetch data.
+//  @param account = signer
+//  this get time of PUNCH IN and PUNCH OUT . then subtracts PUNCH IN timestamp from PUNCH OUT if this equals of greater than 8 hours which is 28800 sec then it returns true else false.
     public fun shift_completed_or_not(account:&signer):bool acquires Shift{
         let shift_completed = borrow_global<Shift>(signer::address_of(account)).shift_completed;
         shift_completed
